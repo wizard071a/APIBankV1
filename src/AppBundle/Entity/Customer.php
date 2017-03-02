@@ -38,7 +38,7 @@ class Customer
     /**
      * @var string
      *
-     * @ORM\Column(name="balance", type="decimal", precision=10, scale=2)
+     * @ORM\Column(name="balance", type="decimal", precision=10, scale=2, options={"default" : 0})
      */
     private $balance;
 
