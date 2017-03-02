@@ -1,0 +1,24 @@
+# FOS REST Bundle
+fos_rest:
+    body_listener: true
+    param_fetcher_listener: true
+    view:
+        view_response_listener: 'force'
+        formats:
+            jsonp: true
+            json: true
+            xml: false
+            rss: false
+        mime_types:
+            json: ['application/json', 'application/x-json']
+            jpg: ['image/jpeg']
+            png: ['image/png']
+        jsonp_handler: ~
+    routing_loader:
+        default_format:  json
+        include_format:  false
+    format_listener:
+        rules:
+            - { path: ^/, priorities: [ html, json, jsonp ], fallback_format: ~, prefer_extension: true }
+    exception:
+        enabled: true
