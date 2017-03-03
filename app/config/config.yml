@@ -82,6 +82,19 @@ assetic:
     use_controller: '%kernel.debug%'
     filters:
         cssrewrite: ~
+    assets:
+        jquery:
+            inputs:
+                - '@AppBundle/Resources/public/js/jquery-3.1.1.min.js'
+        angular:
+            inputs:
+                - '@AppBundle/Resources/public/js/angular.min.js'
+                - '@AppBundle/Resources/public/js/angular-route.min.js'
+        app:
+            inputs:
+                - '@AppBundle/Resources/public/js/app.js'
+                - '@AppBundle/Resources/public/js/Controllers.js'
+                - '@AppBundle/Resources/public/js/Directives.js'
 
 stof_doctrine_extensions:
     orm:

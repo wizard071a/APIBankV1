@@ -18,7 +18,7 @@ class Version20170302231255 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE customer CHANGE balance balance NUMERIC(10, 2) DEFAULT \'0\' NOT NULL');
+        $this->addSql('ALTER TABLE Client CHANGE balance balance NUMERIC(10, 2) DEFAULT \'0\' NOT NULL');
     }
 
     /**
@@ -29,6 +29,6 @@ class Version20170302231255 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('ALTER TABLE customer CHANGE balance balance NUMERIC(10, 2) NOT NULL');
+        $this->addSql('ALTER TABLE Client CHANGE balance balance NUMERIC(10, 2) NOT NULL');
     }
 }

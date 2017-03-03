@@ -15,7 +15,40 @@ class CustomerRestController extends FOSRestController
 {
 
     /**
-     * @Rest\Post("/customer")
+     * @Rest\Get("/customers")
+     *
+     * @param Request $request
+     *
+     * @return View|object
+     */
+    public function getAction(Request $request)
+    {
+        $responseCode = Response::HTTP_OK;
+        $result = [];
+        $offset = $request->get('offset');
+        $limit = $request->get('limit');
+
+        $customers = $this->getDoctrine()->getRepository('AppBundle:Customer')->findBy([], [], $limit, $offset);
+        if (empty($customers)) {
+            $result = 'Customers are no exist';
+            $responseCode = Response::HTTP_NOT_FOUND;
+        }
+
+        if ( Response::HTTP_OK == $responseCode ) {
+            foreach ($customers as $customer) {
+                $result[] = [
+                    'customerId' => $customer->getId(),
+                    'name' => $customer->getName(),
+                    'cnp' => $customer->getCnp(),
+                    'balance' => $customer->getBalance()
+                ];
+            }
+        }
+        return new View($result, $responseCode);
+    }
+
+    /**
+     * @Rest\Post("/Client")
      *
      * @param Request $request
      * @return View

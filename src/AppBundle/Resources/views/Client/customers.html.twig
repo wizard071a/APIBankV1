@@ -1,0 +1,27 @@
+<div>
+    <div class="page-header">
+        <h1>Customer List</h1>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>CNP</th>
+            <th>Balance</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="customer in customers" ng-customer-list-directive>
+            <th scope="row">{{ '{{ customer.customerId }}' }}</th>
+            <td>{{ '{{ customer.name }}' }}</td>
+            <td>{{ '{{  customer.cnp ? "Yes" : "No" }}' }}</td>
+            <td>{{ '{{  customer.balance }}' }}</td>
+            <td>
+                <button type="button" class="btn btn-primary" >Transactions</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

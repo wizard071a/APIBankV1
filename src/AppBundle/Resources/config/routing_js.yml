@@ -1,0 +1,11 @@
+appbundle_client_customers:
+    path:     /customers_list
+    defaults: { _controller: AppBundle:Client:customers }
+    options:
+        expose: true
+
+appbundle_client_transactions:
+    path:     /transactions_list/{customerId}
+    defaults: { _controller: AppBundle:Client:transactions }
+    options:
+        expose: true
