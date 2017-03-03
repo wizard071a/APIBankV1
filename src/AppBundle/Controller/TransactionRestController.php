@@ -48,7 +48,7 @@ class TransactionRestController extends FOSRestController
             $result = [
                 'transactionId' => $transaction->getId(),
                 'amount' => $transaction->getAmount(),
-                'date' => $transaction->getDate()
+                'date' => $transaction->getFormattedDate()
             ];
         }
         return new View($result, $responseCode);
@@ -99,7 +99,8 @@ class TransactionRestController extends FOSRestController
                 $result[] = [
                     'transactionId' => $transaction->getId(),
                     'amount' => $transaction->getAmount(),
-                    'date' => $transaction->getDate()
+                    'date' => $transaction->getFormattedDate(),
+                    'status' => $transaction->getStatus()
                 ];
             }
         }

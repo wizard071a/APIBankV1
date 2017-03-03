@@ -156,9 +156,19 @@ class Transaction
      *
      * @return bool
      */
-    public function getResult()
+    public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * Get Formatted date
+     *
+     * @return string
+     */
+    public function getFormattedDate()
+    {
+        return $this->date->format('Y-m-d H:i:s');
     }
 }
 

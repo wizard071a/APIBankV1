@@ -9,7 +9,12 @@ apibank.config(function($routeProvider) {
         .when('/transactions/:customer_id', {
             controller  : 'Transactions',
             templateUrl: function(params){ return 'transactions_list/' + params.customer_id; }
-        }).otherwise({
+        })
+        .when('/transaction/add/:customer_id', {
+            controller  : 'TransactionsAdd',
+            templateUrl: function(params){ return 'transaction_add/' + params.customer_id; }
+        })
+        .otherwise({
             redirectTo: "/customers"
         })
 });

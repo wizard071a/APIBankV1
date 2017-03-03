@@ -1,1 +1,33 @@
-Transactions List
+<div>
+    <div class="page-header col-sm-12">
+        <div style="float:left; width: 500px">
+            <h1>Transaction List</h1>
+        </div>
+        <div style="float: right; width: 200px">
+            <button type="button" class="btn btn-primary" ng-click="addTransaction()" >Add Transaction</button>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="transaction in transactions" ng-transaction-list-directive>
+            <th scope="row">{{ '{{ transaction.transactionId }}' }}</th>
+            <td>{{ '{{ transaction.amount }}' }}</td>
+            <td>{{ '{{ transaction.date }}' }}</td>
+            <td><span class="transaction-status">{{ '{{ transaction.status ? "Success" : "Failed"}}' }}</span></td>
+            <td>
+                <button type="button" class="btn btn-default" >Edit</button>
+                <button type="button" class="btn btn-danger" >Delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

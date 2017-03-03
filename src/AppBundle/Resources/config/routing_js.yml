@@ -9,3 +9,9 @@ appbundle_client_transactions:
     defaults: { _controller: AppBundle:Client:transactions }
     options:
         expose: true
+
+appbundle_client_transaction_add:
+    path:     /transaction_add/{customerId}
+    defaults: { _controller: AppBundle:Client:transactionsAdd }
+    options:
+        expose: true
