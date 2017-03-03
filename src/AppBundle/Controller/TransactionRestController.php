@@ -136,4 +136,92 @@ class TransactionRestController extends FOSRestController
         ];
         return new View($result, Response::HTTP_OK);
     }
+
+    /**
+     * @Rest\Put("/transaction/{customerId}/{transactionId}")
+     *
+     * @param integer $customerId
+     * @param integer $transactionId
+     * @param Request $request
+     *
+     * @return View
+     */
+    public function putAction($customerId, $transactionId, Request $request)
+    {
+        $transaction = null;
+        $responseCode = Response::HTTP_OK;
+        $result = '';
+
+        $amount = $request->get('amount');
+        if( empty($amount) && empty($customerId) && empty($transactionId))
+        {
+            $result = 'Incorrect request';
+            $responseCode = Response::HTTP_NOT_ACCEPTABLE;
+        }
+
+        if ( Response::HTTP_OK == $responseCode) {
+            $params = [
+                'customerId' => $customerId,
+                'id' => $transactionId
+            ];
+            $transaction = $this->getDoctrine()->getRepository('AppBundle:Transaction')->findOneBy($params);
+        }
+        if (empty($transaction)) {
+            $result = 'Transaction is no exist';
+            $responseCode = Response::HTTP_NOT_FOUND;
+        }
+        if ( Response::HTTP_OK == $responseCode) {
+            $transaction->setCustomerId($customerId);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($transaction);
+            $em->flush();
+            $result = [
+                'TransactionId' => $transaction->getId(),
+                'CustomerId' => $customerId,
+                'amount' => $amount,
+                'date' => $transaction->getDate()
+            ];
+        }
+        return new View($result, $responseCode);
+    }
+
+    /**
+     * @Rest\Delete("/transaction/{transactionId}")
+     *
+     * @param integer $transactionId
+     *
+     * @return View
+     */
+    public function deleteAction($transactionId)
+    {
+        $transaction = null;
+        $responseCode = Response::HTTP_OK;
+        $result = '';
+
+        if( empty($transactionId) )
+        {
+            $result = 'Incorrect request';
+            $responseCode = Response::HTTP_NOT_ACCEPTABLE;
+        }
+
+        if ( Response::HTTP_OK == $responseCode) {
+            $params = [
+                'id' => $transactionId
+            ];
+            $transaction = $this->getDoctrine()->getRepository('AppBundle:Transaction')->findOneBy($params);
+        }
+
+        if (empty($transaction)) {
+            $result = 'Transaction is no exist';
+            $responseCode = Response::HTTP_NOT_FOUND;
+        }
+
+        if ( Response::HTTP_OK == $responseCode ) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($transaction);
+            $em->flush();
+            $result = 'Success';
+        }
+        return new View($result, Response::HTTP_OK);
+    }
 }
