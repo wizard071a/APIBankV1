@@ -1,17 +1,23 @@
 appbundle_client_customers:
-    path:     /customers_list
+    path:     /customers_view/list
     defaults: { _controller: AppBundle:Client:customers }
     options:
         expose: true
 
 appbundle_client_transactions:
-    path:     /transactions_list/{customerId}
+    path:     /transactions_view/list/{customerId}
     defaults: { _controller: AppBundle:Client:transactions }
     options:
         expose: true
 
 appbundle_client_transaction_add:
-    path:     /transaction_add/{customerId}
-    defaults: { _controller: AppBundle:Client:transactionsAdd }
+    path:     /transaction_view/add/{customerId}
+    defaults: { _controller: AppBundle:Client:transactionAdd }
+    options:
+        expose: true
+
+appbundle_client_transaction_edit:
+    path:     /transaction_view/edit/{customerId}/{transactionId}
+    defaults: { _controller: AppBundle:Client:transactionEdit }
     options:
         expose: true

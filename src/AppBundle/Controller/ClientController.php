@@ -27,8 +27,13 @@ class ClientController extends Controller
         return $this->render('AppBundle:Client:transactions.html.twig');
     }
 
-    public function transactionsAddAction($customerId)
+    public function transactionAddAction($customerId)
     {
-        return $this->render('AppBundle:Client:transactions_add.html.twig');
+        return $this->render('AppBundle:Client:transaction_add.html.twig');
+    }
+
+    public function transactionEditAction($customerId, $transactionId)
+    {
+        return $this->render('AppBundle:Client:transaction_edit.html.twig');
     }
 }

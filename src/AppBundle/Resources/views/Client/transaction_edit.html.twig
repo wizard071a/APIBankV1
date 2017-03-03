@@ -1,0 +1,17 @@
+<div>
+    <div class="page-header col-sm-12">
+        <div style="float:left; width: 500px">
+            <h1>Transaction Edit</h1>
+        </div>
+        <div style="float:right; width: 200px">
+            <button type="button" class="btn btn-primary" ng-click="transactionList()" >Transaction List</button>
+        </div>
+    </div>
+    <form>
+        <div class="form-group">
+            <label for="InputAmount">Amount</label>
+            <input type="number" class="form-control" id="InputAmount" placeholder="Amount" value="{{ '{{ amount }}' }}">
+        </div>
+        <button type="button" class="btn btn-primary" ng-click="updateTransaction()">Update Transaction</button>
+    </form>
+</div>

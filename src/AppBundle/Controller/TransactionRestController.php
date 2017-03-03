@@ -98,6 +98,7 @@ class TransactionRestController extends FOSRestController
             foreach ($transactions as $transaction) {
                 $result[] = [
                     'transactionId' => $transaction->getId(),
+                    'customerId' => $transaction->getCustomerId(),
                     'amount' => $transaction->getAmount(),
                     'date' => $transaction->getFormattedDate(),
                     'status' => $transaction->getStatus()
@@ -173,6 +174,7 @@ class TransactionRestController extends FOSRestController
         }
         if ( Response::HTTP_OK == $responseCode) {
             $transaction->setCustomerId($customerId);
+            $transaction->setAmount($amount);
             $em = $this->getDoctrine()->getManager();
             $em->persist($transaction);
             $em->flush();
