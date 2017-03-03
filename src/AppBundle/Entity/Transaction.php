@@ -47,11 +47,15 @@ class Transaction
     /**
      * @var bool
      *
-     * @ORM\Column(name="result", type="boolean")
+     * @ORM\Column(name="status", type="boolean")
      */
-    private $result;
+    private $status;
 
-
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+        $this->status = 0;
+    }
     /**
      * Get id
      *
@@ -135,27 +139,27 @@ class Transaction
     }
 
     /**
-     * Set result
+     * Set status
      *
-     * @param boolean $result
+     * @param boolean $status
      *
      * @return Transaction
      */
-    public function setResult($result)
+    public function setStatus($status)
     {
-        $this->result = $result;
+        $this->status = $status;
 
         return $this;
     }
 
     /**
-     * Get result
+     * Get status
      *
      * @return bool
      */
     public function getResult()
     {
-        return $this->result;
+        return $this->status;
     }
 }
 

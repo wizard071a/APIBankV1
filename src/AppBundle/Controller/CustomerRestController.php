@@ -40,6 +40,9 @@ class CustomerRestController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $em->persist($data);
         $em->flush();
-        return new View(array('CustomerId' => $data->getId()), Response::HTTP_OK);
+        $result = [
+            'CustomerId' => $data->getId()
+        ];
+        return new View($result, Response::HTTP_OK);
     }
 }
