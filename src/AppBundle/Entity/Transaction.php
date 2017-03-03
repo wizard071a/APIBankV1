@@ -53,7 +53,6 @@ class Transaction
 
     public function __construct()
     {
-        $this->date = new \DateTime();
         $this->status = 0;
     }
     /**

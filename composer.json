@@ -30,7 +30,9 @@
         "jms/security-extra-bundle": "dev-master",
         "jms/serializer-bundle": "^1.2",
         "nelmio/cors-bundle": "^1.5",
-        "stof/doctrine-extensions-bundle": "^1.2"
+        "stof/doctrine-extensions-bundle": "^1.2",
+        "monolog/monolog": "^1.22",
+        "symfony/assetic-bundle": "^2.8"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
