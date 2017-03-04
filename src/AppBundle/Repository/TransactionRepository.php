@@ -4,6 +4,7 @@ namespace AppBundle\Repository;
 
 use AppBundle\Entity\TransactionsTotal;
 use \DateInterval;
+
 /**
  * TransactionRepository
  *
@@ -12,11 +13,9 @@ use \DateInterval;
  */
 class TransactionRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function sumTransactions($date) {
-        $date->setTime(0,0);
-        $startDate = clone $date;
-        $endTime = clone $date;
-        $endTime->setTime(23, 59, 59);
+    public function sumTransactions($date)
+    {
+        $period = $this->getPeriodOfDay($date);
 
         $em = $this->getEntityManager();
         $qb = $em->createQueryBuilder();
@@ -27,7 +26,7 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
                 ':from',
                 ':to'
             ))
-            ->setParameters(array('from' => $startDate, 'to' => $endTime))->getQuery();
+            ->setParameters(array('from' => $period['startDate'], 'to' => $period['endDate']))->getQuery();
 
         $result = $query->getScalarResult();
 
@@ -37,5 +36,57 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
 
         $em->persist($transactionTotal);
         $em->flush();
+    }
+
+    public function getTransactions($params = [], $limit = 5, $offset = 1)
+    {
+
+        $parameters = [];
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $query = $qb->select('t')
+            ->from('AppBundle:Transaction', 't');
+
+        $andX = $qb->expr()->andX();
+
+        foreach ($params as $paramName => $paramValue) {
+            switch ($paramName) {
+                case 'date':
+                    $period = $this->getPeriodOfDay($paramValue);
+
+                    $andX->add($qb->expr()->between(
+                        't.date',
+                        ':from',
+                        ':to'
+                    ));
+                    $parameters['from'] =  $period['startDate'];
+                    $parameters['to'] =  $period['endDate'];
+                    break;
+                default:
+                    $andX->add($qb->expr()->eq('t.' . $paramName, ':' . $paramName));
+                    $parameters[$paramName] =  $paramValue;
+                    break;
+            }
+        }
+        if (!empty($andX)) {
+            $query->setParameters($parameters);
+            $query->add('where', $andX);
+        }
+        $query->setFirstResult($offset)
+            ->setMaxResults($limit);
+        $queryResult = $query->getQuery();
+
+        $result = $queryResult->getResult();
+        
+        return $result;
+    }
+
+    private function getPeriodOfDay($date)
+    {
+        $startDate = clone $date;
+        $endDate = clone $date;
+        $startDate->setTime(0, 0);
+        $endDate->setTime(23, 59, 59);
+
+        return ['startDate' => $startDate, 'endDate' => $endDate];
     }
 }

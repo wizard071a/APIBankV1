@@ -10,6 +10,13 @@
     '@jquery' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    {% block stylesheets %}
+        {% stylesheets 'bundles/app/js/jquery-ui/jquery-ui.css' filter='cssrewrite' %}
+        <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    {% endblock %}
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+          rel = "stylesheet">
     {% javascripts
     '@angular' %}
     <script src="{{ asset_url }}"></script>

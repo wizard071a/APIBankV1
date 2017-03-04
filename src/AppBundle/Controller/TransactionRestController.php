@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\View\View;
 use AppBundle\Entity\Transaction;
+use \DateTime;
 
 class TransactionRestController extends FOSRestController
 {
@@ -85,10 +86,9 @@ class TransactionRestController extends FOSRestController
                 $params['amount'] = $amount;
             }
             if (!empty($date)) {
-                $params['date'] = $date;
+                $params['date'] = new DateTime($date);
             }
-
-            $transactions = $this->getDoctrine()->getRepository('AppBundle:Transaction')->findBy($params, array(), $limit, $offset);
+            $transactions = $this->getDoctrine()->getRepository('AppBundle:Transaction')->getTransactions($params, $limit, $offset);
         }
         if (empty($transactions)) {
             $result = 'Transactions are no exist';

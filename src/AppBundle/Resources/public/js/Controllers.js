@@ -8,7 +8,11 @@ apibank.controller('Transactions', function ($scope, $http, $routeParams, $locat
     $scope.filteredTodos = []
         , $scope.currentPage = 1
         , $scope.numPerPage = 5
-        , $scope.maxSize = 50;
+        , $scope.maxSize = 50
+        , $scope.amount = ''
+        , $scope.date = '';
+
+    $( "#InputDate" ).datepicker();
 
     $scope.offset = ($scope.currentPage - 1) * $scope.numPerPage;
     $scope.data = {};
@@ -38,7 +42,9 @@ apibank.controller('Transactions', function ($scope, $http, $routeParams, $locat
 
     $scope.getTransactions = function () {
         $scope.data = {
-            'limit' : $scope.numPerPage
+            'limit' : $scope.numPerPage,
+            'amount' : $scope.amount,
+            'date' : $scope.date
         };
         $scope.data.offset = ($scope.currentPage - 1) * $scope.numPerPage;
 
@@ -46,6 +52,13 @@ apibank.controller('Transactions', function ($scope, $http, $routeParams, $locat
         $http.get('api/v1/transactions/' + $routeParams.customer_id + '?' + qs).then(function (response) {
             $scope.transactions = response.data;
         });
+    };
+
+    $scope.filterTransactons = function () {
+        $scope.amount = angular.element('#InputAmount').val();
+        $scope.date = angular.element('#InputDate').val();
+        $scope.currentPage = 1;
+        $scope.getTransactions();
     };
 
     $scope.setTransactionsOnPage($scope.numPerPage);
