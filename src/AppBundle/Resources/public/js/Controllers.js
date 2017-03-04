@@ -1,15 +1,12 @@
-apibank.controller('Customers', function ($scope, $http, $location, genericServices, $httpParamSerializer, $rootScope) {
-    $scope.getCustomers = function (apiKey) {
-        $rootScope.apikey = $httpParamSerializer({'apikey' : apiKey});
+apibank.controller('Customers', function ($scope, $http, $location, genericServices, $rootScope) {
+    genericServices.getApiKey(function () {
         $http.get('api/v1/customers?' + $rootScope.apikey).then(function (response) {
             $scope.customers = response.data;
         });
-    }
-
-    genericServices.getApiKey($scope.getCustomers);
+    });
 });
 
-apibank.controller('Transactions', function ($scope, $http, $routeParams, $location, $httpParamSerializer, $rootScope) {
+apibank.controller('Transactions', function ($scope, $http, $routeParams, $location, $httpParamSerializer, $rootScope, genericServices) {
     $scope.filteredTodos = []
         , $scope.currentPage = 1
         , $scope.numPerPage = 5
@@ -54,8 +51,11 @@ apibank.controller('Transactions', function ($scope, $http, $routeParams, $locat
         $scope.data.offset = ($scope.currentPage - 1) * $scope.numPerPage;
 
         var qs = $httpParamSerializer($scope.data);
-        $http.get('api/v1/transactions/' + $routeParams.customer_id + '?' + qs + '&' + $rootScope.apikey).then(function (response) {
-            $scope.transactions = response.data;
+
+        genericServices.getApiKey(function () {
+            $http.get('api/v1/transactions/' + $routeParams.customer_id + '?' + qs + '&' + $rootScope.apikey).then(function (response) {
+                $scope.transactions = response.data;
+            });
         });
     };
 
@@ -69,7 +69,7 @@ apibank.controller('Transactions', function ($scope, $http, $routeParams, $locat
     $scope.setTransactionsOnPage($scope.numPerPage);
 });
 
-apibank.controller('TransactionsAdd', function ($scope, $http, $routeParams, $location, $rootScope) {
+apibank.controller('TransactionsAdd', function ($scope, $http, $routeParams, $location, $rootScope, genericServices) {
     $scope.transactionList = function () {
         $location.path('/transactions/' + $routeParams.customer_id);
     };
@@ -77,25 +77,31 @@ apibank.controller('TransactionsAdd', function ($scope, $http, $routeParams, $lo
     $scope.addTransaction = function () {
         var amount = angular.element('#InputAmount').val();
         if (0 < amount) {
-            $http.post('api/v1/transaction/' + $routeParams.customer_id + '?' + $rootScope.apikey, {'amount': amount}).then(function (response) {
-                $location.path('/transactions/' + $routeParams.customer_id);
+            genericServices.getApiKey(function () {
+                $http.post('api/v1/transaction/' + $routeParams.customer_id + '?' + $rootScope.apikey, {'amount': amount}).then(function (response) {
+                    $location.path('/transactions/' + $routeParams.customer_id);
+                });
             });
         }
     };
 });
 
-apibank.controller('TransactionsEdit', function ($scope, $http, $routeParams, $location, $rootScope) {
+apibank.controller('TransactionsEdit', function ($scope, $http, $routeParams, $location, $rootScope, genericServices) {
     var path = $routeParams.customer_id + '/' + $routeParams.transaction_id;
     $scope.transactionList = function () {
         $location.path('/transactions/' + $routeParams.customer_id);
     };
-    $http.get('api/v1/transaction/' + path + '?' + $rootScope.apikey).then(function (response) {
-        $scope.amount = response.data.amount;
+    genericServices.getApiKey(function () {
+        $http.get('api/v1/transaction/' + path + '?' + $rootScope.apikey).then(function (response) {
+            $scope.amount = response.data.amount;
+        });
     });
     $scope.updateTransaction = function () {
         var amount = angular.element('#InputAmount').val();
-        $http.put('api/v1/transaction/' + path + '?' + $rootScope.apikey, {'amount': amount}).then(function (response) {
-            $location.path('/transactions/' + $routeParams.customer_id);
+        genericServices.getApiKey(function () {
+            $http.put('api/v1/transaction/' + path + '?' + $rootScope.apikey, {'amount': amount}).then(function (response) {
+                $location.path('/transactions/' + $routeParams.customer_id);
+            });
         });
     };
 });

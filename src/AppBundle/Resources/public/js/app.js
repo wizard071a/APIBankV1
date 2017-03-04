@@ -23,12 +23,17 @@ apibank.config(function($routeProvider) {
         })
 });
 
-apibank.factory("genericServices", function($http) {
+apibank.factory("genericServices", function($http, $rootScope, $httpParamSerializer) {
     return {
         getApiKey: function(callback) {
-            $http.get('getApiKey').then(function (response) {
-                callback && callback(response.data.api_key);
-            });
+            if (!$rootScope.apikey) {
+                $http.get('getApiKey').then(function (response) {
+                    $rootScope.apikey = $httpParamSerializer({'apikey' : response.data.api_key});
+                    callback && callback();
+                });
+            } else {
+                callback && callback();
+            }
         }
     }
 });

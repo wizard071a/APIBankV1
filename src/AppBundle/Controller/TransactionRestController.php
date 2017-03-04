@@ -17,6 +17,13 @@ use Monolog\Handler\StreamHandler;
 
 class TransactionRestController extends FOSRestController
 {
+    private $_cache = false;
+
+    private function initCache($customerId = false) {
+        if (!empty($customerId)) {
+            $this->_cache = new FilesystemAdapter('transactions' . $customerId, 3600);
+        }
+    }
     /**
      * @Rest\Get("/transaction/{customerId}/{transactionId}")
      *
@@ -81,6 +88,7 @@ class TransactionRestController extends FOSRestController
             $responseCode = Response::HTTP_NOT_ACCEPTABLE;
         }
 
+        $this->initCache($customerId);
         if ( Response::HTTP_OK == $responseCode) {
             $params = [
                 'customerId' => $customerId,
@@ -91,7 +99,7 @@ class TransactionRestController extends FOSRestController
             if (!empty($date)) {
                 $params['date'] = new DateTime($date);
             }
-            $transactions = $this->getTransations($params, $date, $amount, $limit, $offset);
+            $transactions = $this->getTransations($params, $amount, $limit, $offset);
         }
         if (empty($transactions)) {
             $result = 'Transactions are no exist';
@@ -130,6 +138,7 @@ class TransactionRestController extends FOSRestController
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
+        $this->initCache($customerId);
         $logger->info('Add transaction start', ['customerId' => $customerId, 'amount' => $amount]);
         $data->setCustomerId($customerId);
         $data->setAmount($amount);
@@ -142,6 +151,7 @@ class TransactionRestController extends FOSRestController
             'amount' => $amount,
             'date' => $data->getDate()
         ];
+        $this->_cache->clear();
         $logger->info('trnsaction created', ['transaction' => $result]);
         return new View($result, Response::HTTP_OK);
     }
@@ -182,6 +192,7 @@ class TransactionRestController extends FOSRestController
             $responseCode = Response::HTTP_NOT_FOUND;
         }
         if ( Response::HTTP_OK == $responseCode) {
+            $this->initCache($customerId);
             $logger->info('Edit transaction old amount', ['oldAmount' => $transaction->getAmount()]);
             $transaction->setCustomerId($customerId);
             $transaction->setAmount($amount);
@@ -194,6 +205,7 @@ class TransactionRestController extends FOSRestController
                 'amount' => $amount,
                 'date' => $transaction->getDate()
             ];
+            $this->_cache->clear();
             $logger->info('Edit transaction updated', $result);
         }
         return new View($result, $responseCode);
@@ -231,24 +243,30 @@ class TransactionRestController extends FOSRestController
         }
 
         if ( Response::HTTP_OK == $responseCode ) {
+            $customerId = $transaction->getCustomerId();
             $em = $this->getDoctrine()->getManager();
             $em->remove($transaction);
             $em->flush();
+            $this->initCache($customerId);
+            $this->_cache->clear();
             $result = 'Success';
         }
         return new View($result, Response::HTTP_OK);
     }
 
-    private function getTransations($params, $date, $amount, $limit, $offset) {
-        $cache = new FilesystemAdapter('transactions', 3600);
-        $cacheName = 'tranasctions_' . $params['customerId'] . '_' . $amount . '_' . $date . '_' . $limit . '_' . $offset;
+    private function getTransations($params, $amount, $limit, $offset) {
+        $date = '';
+        if (!empty($params['date'])) {
+            $date = $params['date']->format('Ymd') . '_';
+        }
+        $cacheName = 'tranasctions_' . $amount . '_' . $date . $limit . '_' . $offset;
 
-        $cachedData = $cache->getItem($cacheName);
+        $cachedData = $this->_cache->getItem($cacheName);
 
 
         if (!$cachedData->isHit()) {
             $transactions = $this->getDoctrine()->getRepository('AppBundle:Transaction')->getTransactions($params, $limit, $offset);
-            $cache->save($cachedData->set($transactions));
+            $this->_cache->save($cachedData->set($transactions));
         } else {
             $transactions = $cachedData->get();
         }
