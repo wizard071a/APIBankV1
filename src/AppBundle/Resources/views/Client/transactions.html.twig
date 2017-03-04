@@ -4,7 +4,7 @@
             <h1>Transaction List</h1>
         </div>
         <div style="float: right; width: 200px">
-            <button type="button" class="btn btn-primary" ng-click="addTransaction()" >Add Transaction</button>
+            <button type="button" class="btn btn-primary" ng-click="addTransaction()">Add Transaction</button>
         </div>
     </div>
     <table class="table table-striped">
@@ -24,10 +24,30 @@
             <td>{{ '{{ transaction.date }}' }}</td>
             <td><span class="transaction-status">{{ '{{ transaction.status ? "Success" : "Failed"}}' }}</span></td>
             <td>
-                <button type="button" class="btn btn-default editBtn" >Edit</button>
-                <button type="button" class="btn btn-danger deleteBtn" >Delete</button>
+                <button type="button" class="btn btn-default editBtn">Edit</button>
+                <button type="button" class="btn btn-danger deleteBtn">Delete</button>
             </td>
         </tr>
         </tbody>
     </table>
+    <div class="col-sm-12">
+        <nav>
+            <ul class="pager" style="width: 400px; float: left;">
+                <li><a href="javascript:void(0)" ng-click="getPreviosPage()">Previous</a></li>
+                <li><a href="javascript:void(0)" ng-click="setNextPage()">Next</a></li>
+            </ul>
+            <div class="dropdown" style="width: 60px; float: left; margin: 22px 0 0;">
+                <button class="btn btn-default dropdown-toggle" type="button" id="transactions_displayed"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    {{ '{{ numPerPage }}' }}
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="javascript:void(0)" ng-click="setTransactionsOnPage(5)">5</a></li>
+                    <li><a href="javascript:void(0)" ng-click="setTransactionsOnPage(10)">10</a></li>
+                    <li><a href="javascript:void(0)" ng-click="setTransactionsOnPage(50)">50</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
 </div>

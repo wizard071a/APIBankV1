@@ -87,6 +87,7 @@ class TransactionRestController extends FOSRestController
             if (!empty($date)) {
                 $params['date'] = $date;
             }
+
             $transactions = $this->getDoctrine()->getRepository('AppBundle:Transaction')->findBy($params, array(), $limit, $offset);
         }
         if (empty($transactions)) {
