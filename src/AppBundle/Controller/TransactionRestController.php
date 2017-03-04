@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,7 +91,7 @@ class TransactionRestController extends FOSRestController
             if (!empty($date)) {
                 $params['date'] = new DateTime($date);
             }
-            $transactions = $this->getDoctrine()->getRepository('AppBundle:Transaction')->getTransactions($params, $limit, $offset);
+            $transactions = $this->getTransations($params, $date, $amount, $limit, $offset);
         }
         if (empty($transactions)) {
             $result = 'Transactions are no exist';
@@ -236,5 +237,22 @@ class TransactionRestController extends FOSRestController
             $result = 'Success';
         }
         return new View($result, Response::HTTP_OK);
+    }
+
+    private function getTransations($params, $date, $amount, $limit, $offset) {
+        $cache = new FilesystemAdapter('transactions', 3600);
+        $cacheName = 'tranasctions_' . $params['customerId'] . '_' . $amount . '_' . $date . '_' . $limit . '_' . $offset;
+
+        $cachedData = $cache->getItem($cacheName);
+
+
+        if (!$cachedData->isHit()) {
+            $transactions = $this->getDoctrine()->getRepository('AppBundle:Transaction')->getTransactions($params, $limit, $offset);
+            $cache->save($cachedData->set($transactions));
+        } else {
+            $transactions = $cachedData->get();
+        }
+
+        return $transactions;
     }
 }
