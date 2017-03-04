@@ -22,3 +22,13 @@ apibank.config(function($routeProvider) {
             redirectTo: "/customers"
         })
 });
+
+apibank.factory("genericServices", function($http) {
+    return {
+        getApiKey: function(callback) {
+            $http.get('getApiKey').then(function (response) {
+                callback && callback(response.data.api_key);
+            });
+        }
+    }
+});

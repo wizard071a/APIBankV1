@@ -11,6 +11,11 @@ restful_services:
     type:     rest
     prefix:   /api
 
+rest_services:
+    resource: "@AppBundle/Resources/config/routing.yml"
+    type:     rest
+    prefix:   /
+
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
     prefix: /

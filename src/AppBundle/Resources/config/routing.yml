@@ -1,0 +1,4 @@
+apikey_rest:
+    type: rest
+    resource: AppBundle\Controller\TokenRestController
+    name_prefix:  api_1_apikey_

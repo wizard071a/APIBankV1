@@ -8,7 +8,7 @@ apibank.directive('ngCustomerListDirective', function($location) {
     };
 });
 
-apibank.directive('ngTransactionListDirective', function($location, $http, $route) {
+apibank.directive('ngTransactionListDirective', function($location, $http, $route, $rootScope) {
     return function($scope, element, attrs) {
         angular.element('button.editBtn:last').bind('click', function(){
             $scope.$apply(function() {
@@ -17,7 +17,7 @@ apibank.directive('ngTransactionListDirective', function($location, $http, $rout
         });
         angular.element('button.deleteBtn:last').bind('click', function(){
             $scope.$apply(function() {
-                $http.delete('api/v1/transaction/' + $scope.transaction.transactionId).then(function (response) {
+                $http.delete('api/v1/transaction/' + $scope.transaction.transactionId + '?' + $rootScope.apikey).then(function (response) {
                     $route.reload();
                 });
             });
