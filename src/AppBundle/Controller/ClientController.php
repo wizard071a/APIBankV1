@@ -5,14 +5,23 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class ClientController extends Controller
 {
     /**
+     * @Route("/", name="basepage")
+     */
+    public function baseAction(Request $request)
+    {
+        return $this->redirectToRoute('homepage');
+    }
+
+    /**
      * @Route("/main", name="homepage")
      */
-    public function indexAction(Request $request)
+    public function mainAction(Request $request)
     {
         return $this->render('AppBundle:Client:homepage.html.twig');
     }

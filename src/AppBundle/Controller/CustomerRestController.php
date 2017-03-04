@@ -48,7 +48,7 @@ class CustomerRestController extends FOSRestController
     }
 
     /**
-     * @Rest\Post("/Client")
+     * @Rest\Post("/Customer")
      *
      * @param Request $request
      * @return View

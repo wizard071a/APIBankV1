@@ -9,6 +9,8 @@ security:
     providers:
         fos_userbundle:
             id: fos_user.user_provider.username
+#        api_key_user_provider:
+#            id: api_key_user_provider
 
     firewalls:
         main:
@@ -17,9 +19,15 @@ security:
                 provider: fos_userbundle
             logout:       true
             anonymous:    true
+#        secured_area:
+#            pattern: ^/api
+#            stateless: true
+#            simple_preauth:
+#                authenticator: apikey_authenticator
+#            provider: api_key_user_provider
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
+        - { path: ^/api, roles: ROLE_ADMIN }
+        - { path: ^/main, roles: ROLE_ADMIN }

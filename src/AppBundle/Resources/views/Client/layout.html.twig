@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="ApiBank">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -10,9 +10,18 @@
     '@jquery' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+    {% javascripts
+    '@angular' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    {% javascripts
+    '@app' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 </head>
 <body>
-{% block content %}{% endblock %}
+<div ng-view>
+</div>
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 {% block javascripts %}
 {% endblock %}
