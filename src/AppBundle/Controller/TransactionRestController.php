@@ -140,6 +140,7 @@ class TransactionRestController extends FOSRestController
         }
         $this->initCache($customerId);
         $logger->info('Add transaction start', ['customerId' => $customerId, 'amount' => $amount]);
+
         $data->setCustomerId($customerId);
         $data->setAmount($amount);
         $em = $this->getDoctrine()->getManager();
@@ -188,6 +189,7 @@ class TransactionRestController extends FOSRestController
             $transaction = $this->getDoctrine()->getRepository('AppBundle:Transaction')->findOneBy($params);
         }
         if (empty($transaction)) {
+            $logger->info('Transaction is no exist');
             $result = 'Transaction is no exist';
             $responseCode = Response::HTTP_NOT_FOUND;
         }
