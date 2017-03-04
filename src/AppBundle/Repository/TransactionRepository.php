@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\TransactionsTotal;
+use \DateInterval;
 /**
  * TransactionRepository
  *
@@ -10,4 +12,30 @@ namespace AppBundle\Repository;
  */
 class TransactionRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function sumTransactions($date) {
+        $date->setTime(0,0);
+        $startDate = clone $date;
+        $endTime = clone $date;
+        $endTime->setTime(23, 59, 59);
+
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        $query = $qb->select('sum(t.amount) as total')
+            ->from('AppBundle:Transaction', 't')
+            ->add('where', $qb->expr()->between(
+                't.date',
+                ':from',
+                ':to'
+            ))
+            ->setParameters(array('from' => $startDate, 'to' => $endTime))->getQuery();
+
+        $result = $query->getScalarResult();
+
+        $transactionTotal = new TransactionsTotal();
+        $transactionTotal->setDate($date);
+        $transactionTotal->setTotal($result[0]['total']);
+
+        $em->persist($transactionTotal);
+        $em->flush();
+    }
 }
