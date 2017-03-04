@@ -28,7 +28,8 @@ INSERT INTO `migration_versions` (`version`) VALUES
 ('20170302223206'),
 ('20170302231255'),
 ('20170302235250'),
-('20170304005808');
+('20170304005808'),
+('20170304160100');
 
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE `transaction` (
@@ -43,7 +44,6 @@ CREATE TABLE `transaction` (
 INSERT INTO `transaction` (`id`, `customerId`, `amount`, `date`, `status`) VALUES
 (2,	2,	50.00,	'2017-03-02 23:34:08',	0),
 (5,	1,	250.00,	'2017-03-03 22:14:37',	0),
-(6,	1,	693.00,	'2017-03-03 22:14:48',	0),
 (10,	1,	5479.65,	'2017-03-03 22:18:21',	0),
 (11,	1,	950.00,	'2017-03-03 23:58:10',	0),
 (12,	1,	489.00,	'2017-03-03 23:58:18',	0),
@@ -52,7 +52,8 @@ INSERT INTO `transaction` (`id`, `customerId`, `amount`, `date`, `status`) VALUE
 (15,	1,	960.00,	'2017-03-04 12:33:47',	0),
 (16,	1,	540.00,	'2017-03-04 12:34:31',	0),
 (17,	1,	678.00,	'2017-03-04 12:43:48',	0),
-(18,	1,	456.00,	'2017-03-04 12:44:35',	0);
+(18,	1,	456.00,	'2017-03-04 12:44:35',	0),
+(19,	1,	4578.00,	'2017-03-04 19:17:07',	0);
 
 DROP TABLE IF EXISTS `transactions_total`;
 CREATE TABLE `transactions_total` (
@@ -81,13 +82,15 @@ CREATE TABLE `user` (
   `roles` longtext COLLATE utf8_unicode_ci NOT NULL COMMENT '(DC2Type:array)',
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
+  `api_key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_8D93D64992FC23A8` (`username_canonical`),
   UNIQUE KEY `UNIQ_8D93D649A0D96FBF` (`email_canonical`),
+  UNIQUE KEY `UNIQ_8D93D649C912ED9D` (`api_key`),
   UNIQUE KEY `UNIQ_8D93D649C05FB297` (`confirmation_token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO `user` (`id`, `username`, `username_canonical`, `email`, `email_canonical`, `enabled`, `salt`, `password`, `last_login`, `confirmation_token`, `password_requested_at`, `roles`, `created`, `updated`) VALUES
-(1,	'admin',	'admin',	'admin@admin.com',	'admin@admin.com',	1,	NULL,	'$2y$13$Gk0Ml.skGrUSOkmJpwpCUOhhzwkRXAt/Omfk1cFud72E0FS8mF6oy',	'2017-03-04 10:13:41',	NULL,	NULL,	'a:1:{i:0;s:10:\"ROLE_ADMIN\";}',	'2017-03-03 14:36:15',	'2017-03-04 10:13:41');
+INSERT INTO `user` (`id`, `username`, `username_canonical`, `email`, `email_canonical`, `enabled`, `salt`, `password`, `last_login`, `confirmation_token`, `password_requested_at`, `roles`, `created`, `updated`, `api_key`) VALUES
+(1,	'admin',	'admin',	'admin@admin.com',	'admin@admin.com',	1,	NULL,	'$2y$13$Gk0Ml.skGrUSOkmJpwpCUOhhzwkRXAt/Omfk1cFud72E0FS8mF6oy',	'2017-03-04 17:28:30',	NULL,	NULL,	'a:1:{i:0;s:10:\"ROLE_ADMIN\";}',	'2017-03-03 14:36:15',	'2017-03-04 19:17:52',	'y7WGIdiOrrLS116e+DQrzO8oiqc=');
 
--- 2017-03-04 12:53:00
+-- 2017-03-04 19:20:52
