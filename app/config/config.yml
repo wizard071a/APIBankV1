@@ -102,3 +102,13 @@ stof_doctrine_extensions:
         default:
             sluggable: true
             timestampable: true
+
+monolog:
+    channels: ['transactions']
+    handlers:
+        transactions:
+            # log all messages (since debug is the lowest level)
+            level:    info
+            type:     stream
+            path:     '%kernel.logs_dir%/transactions.log'
+            channels: [transactions]

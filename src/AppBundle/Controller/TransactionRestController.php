@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\View\View;
 use AppBundle\Entity\Transaction;
 use \DateTime;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class TransactionRestController extends FOSRestController
 {
@@ -120,12 +122,14 @@ class TransactionRestController extends FOSRestController
      */
     public function postAction($customerId, Request $request)
     {
+        $logger = $this->get('monolog.logger.transactions');
         $data = new Transaction();
         $amount = $request->get('amount');
         if( empty($amount) && empty($customerId) )
         {
             return new View("NULL VALUES ARE NOT ALLOWED", Response::HTTP_NOT_ACCEPTABLE);
         }
+        $logger->info('Add transaction start', ['customerId' => $customerId, 'amount' => $amount]);
         $data->setCustomerId($customerId);
         $data->setAmount($amount);
         $em = $this->getDoctrine()->getManager();
@@ -137,6 +141,7 @@ class TransactionRestController extends FOSRestController
             'amount' => $amount,
             'date' => $data->getDate()
         ];
+        $logger->info('trnsaction created', ['transaction' => $result]);
         return new View($result, Response::HTTP_OK);
     }
 
@@ -151,6 +156,7 @@ class TransactionRestController extends FOSRestController
      */
     public function putAction($customerId, $transactionId, Request $request)
     {
+        $logger = $this->get('monolog.logger.transactions');
         $transaction = null;
         $responseCode = Response::HTTP_OK;
         $result = '';
@@ -167,6 +173,7 @@ class TransactionRestController extends FOSRestController
                 'customerId' => $customerId,
                 'id' => $transactionId
             ];
+            $logger->info('Edit transaction start', ['params' => $params, 'amount' => $amount]);
             $transaction = $this->getDoctrine()->getRepository('AppBundle:Transaction')->findOneBy($params);
         }
         if (empty($transaction)) {
@@ -174,6 +181,7 @@ class TransactionRestController extends FOSRestController
             $responseCode = Response::HTTP_NOT_FOUND;
         }
         if ( Response::HTTP_OK == $responseCode) {
+            $logger->info('Edit transaction old amount', ['oldAmount' => $transaction->getAmount()]);
             $transaction->setCustomerId($customerId);
             $transaction->setAmount($amount);
             $em = $this->getDoctrine()->getManager();
@@ -185,6 +193,7 @@ class TransactionRestController extends FOSRestController
                 'amount' => $amount,
                 'date' => $transaction->getDate()
             ];
+            $logger->info('Edit transaction updated', $result);
         }
         return new View($result, $responseCode);
     }
